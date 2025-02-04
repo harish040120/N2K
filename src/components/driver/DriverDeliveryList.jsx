@@ -1,64 +1,52 @@
-import { useState } from 'react';
-import StatusBadge from '../admin/StatusBadge';
-import { determineHub } from '../../utils/hubAllocation';
-import { mockDeliveries } from './mockData';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
+// Fix the import below to point to the actual file location:
+import StatusBadge from '../admin/StatusBadge.jsx'; // Adjust path as necessary
 
 function DriverDeliveryList({ onUpdateDelivery }) {
-  const [activeDeliveries, setActiveDeliveries] = useState(mockDeliveries);
+  const [activeDeliveries, setActiveDeliveries] = useState([]);
+
+  useEffect(() => {
+    fetchDeliveries();
+  }, []);
+
+  const fetchDeliveries = async () => {
+    try {
+      const response = await axios.get('http://localhost:5000/api/deliveries');
+      setActiveDeliveries(response.data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   return (
     <div className="bg-white shadow rounded-lg">
       <div className="px-4 py-5 sm:p-6">
-        <h2 className="text-xl font-semibold mb-4">Today's Deliveries</h2>
+        <h2 className="text-xl font-semibold mb-4">Today&apos;s Deliveries</h2>
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200">
             <thead>
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                  Order ID
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                  Status
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                  Customer
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                  Hub
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                  Delivery Address
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                  Actions
-                </th>
+                <th>Booking ID</th>
+                <th>Status</th>
+                <th>Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-200">
+            <tbody>
               {activeDeliveries.map((delivery) => (
-                <tr key={delivery.id}>
+                <tr key={delivery.delivery_id}>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {delivery.id}
+                    {delivery.booking_id}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                     <StatusBadge status={delivery.status} />
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {delivery.customerName}
-                    <div className="text-sm text-gray-500">{delivery.phoneNumber}</div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {determineHub(delivery.pickupAddress)}
-                  </td>
-                  <td className="px-6 py-4 text-sm text-gray-900">
-                    {delivery.deliveryAddress}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                     <button
                       onClick={() => onUpdateDelivery(delivery)}
-                      className="text-blue-600 hover:text-blue-900 font-medium"
+                      className="text-blue-600 hover:text-blue-900"
                     >
-                      Update Status
+                      Update
                     </button>
                   </td>
                 </tr>

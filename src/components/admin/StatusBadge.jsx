@@ -11,7 +11,11 @@ function StatusBadge({ status }) {
   };
 
   return (
-    <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusStyles(status)}`}>
+    <span
+      className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusStyles(
+        status
+      )}`}
+    >
       {status}
     </span>
   );

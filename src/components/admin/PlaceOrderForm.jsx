@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import OrderAllocationDetails from './OrderAllocationDetails';
 
 const ROUTES = ['Route A', 'Route B', 'Route C', 'Route D', 'Route E', 'Route F'];
-const PAYMENT_METHODS = ['Cash on Delivery', 'Online Payment'];
+const PAYMENT_OPTIONS = ['Paid', 'To Pay'];
 
 export default function PlaceOrderForm({ onClose }) {
   const [formData, setFormData] = useState({
@@ -11,7 +11,7 @@ export default function PlaceOrderForm({ onClose }) {
     phoneNumber: '',
     quantity: '',
     weight: '',
-    paymentMethod: 'Cash on Delivery',
+    paymentMethod: 'Paid',
     route: 'Route A'
   });
 
@@ -28,155 +28,114 @@ export default function PlaceOrderForm({ onClose }) {
   const handleChange = (e) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   };
 
+  // Static form submission: simulate saving by logging the form data
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('Order placed:', formData);
+    console.log('Static submission:', formData);
+    // Optionally clear the form or close the modal
     onClose();
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <div>
-        <label htmlFor="fromAddress" className="block text-sm font-medium text-gray-700">
-          From Address
-        </label>
-        <textarea
-          id="fromAddress"
+    <div className="p-4">
+      <h2 className="font-bold text-xl mb-4">Place Order (Static)</h2>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <input
+          type="text"
           name="fromAddress"
-          rows="2"
-          required
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+          placeholder="From Address"
           value={formData.fromAddress}
           onChange={handleChange}
+          className="w-full border p-2"
         />
-      </div>
-
-      <div>
-        <label htmlFor="toAddress" className="block text-sm font-medium text-gray-700">
-          To Address
-        </label>
-        <textarea
-          id="toAddress"
+        <input
+          type="text"
           name="toAddress"
-          rows="2"
-          required
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+          placeholder="To Address"
           value={formData.toAddress}
           onChange={handleChange}
+          className="w-full border p-2"
         />
-      </div>
-
-      <div>
-        <label htmlFor="phoneNumber" className="block text-sm font-medium text-gray-700">
-          Phone Number
-        </label>
+         {/* New text box for vehicle selection */}
+      <input
+        type="text"
+        name="vehicle"
+        placeholder="Vehicle"
+        value={formData.vehicle}
+        onChange={handleChange}
+        className="w-full border p-2"
+      />
+      {/* New text box for maximum capacity of the vehicle */}
+      <input
+        type="number"
+        name="maxCapacity"
+        placeholder="Max Capacity (kg)"
+        value={formData.maxCapacity}
+        onChange={handleChange}
+        className="w-full border p-2"
+      />
         <input
-          type="tel"
-          id="phoneNumber"
+          type="text"
           name="phoneNumber"
-          required
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+          placeholder="Phone Number"
           value={formData.phoneNumber}
           onChange={handleChange}
+          className="w-full border p-2"
         />
-      </div>
-
-      <div className="grid grid-cols-2 gap-4">
-        <div>
-          <label htmlFor="quantity" className="block text-sm font-medium text-gray-700">
-            Quantity
-          </label>
-          <input
-            type="number"
-            id="quantity"
-            name="quantity"
-            min="1"
-            required
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-            value={formData.quantity}
-            onChange={handleChange}
-          />
-        </div>
-
-        <div>
-          <label htmlFor="weight" className="block text-sm font-medium text-gray-700">
-            Weight (kg)
-          </label>
-          <input
-            type="number"
-            id="weight"
-            name="weight"
-            min="0.1"
-            step="0.1"
-            required
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-            value={formData.weight}
-            onChange={handleChange}
-          />
-        </div>
-      </div>
-
-      <div>
-        <label htmlFor="route" className="block text-sm font-medium text-gray-700">
-          Route
-        </label>
-        <select
-          id="route"
-          name="route"
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-          value={formData.route}
+        <input
+          type="number"
+          name="quantity"
+          placeholder="Quantity"
+          value={formData.quantity}
           onChange={handleChange}
-        >
-          {ROUTES.map((route) => (
-            <option key={route} value={route}>{route}</option>
-          ))}
-        </select>
-      </div>
-
-      <div>
-        <label htmlFor="paymentMethod" className="block text-sm font-medium text-gray-700">
-          Payment Method
-        </label>
+          className="w-full border p-2"
+        />
+        <input
+          type="number"
+          name="weight"
+          placeholder="Weight"
+          value={formData.weight}
+          onChange={handleChange}
+          className="w-full border p-2"
+        />
         <select
-          id="paymentMethod"
           name="paymentMethod"
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
           value={formData.paymentMethod}
           onChange={handleChange}
+          className="w-full border p-2"
         >
-          {PAYMENT_METHODS.map((method) => (
-            <option key={method} value={method}>{method}</option>
+          {PAYMENT_OPTIONS.map((option) => (
+            <option key={option} value={option}>
+              {option}
+            </option>
           ))}
         </select>
-      </div>
-
-      {showAllocation && (
-        <OrderAllocationDetails
-          weight={Number(formData.weight)}
-          quantity={Number(formData.quantity)}
-          location={formData.toAddress}
-        />
-      )}
-
-      <div className="flex justify-end space-x-3">
-        <button
-          type="button"
-          onClick={onClose}
-          className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50"
+        <select
+          name="route"
+          value={formData.route}
+          onChange={handleChange}
+          className="w-full border p-2"
         >
-          Cancel
-        </button>
-        <button
-          type="submit"
-          className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700"
-        >
-          Place Order
-        </button>
-      </div>
-    </form>
+          {ROUTES.map((route) => (
+            <option key={route} value={route}>
+              {route}
+            </option>
+          ))}
+        </select>
+        {showAllocation && <OrderAllocationDetails formData={formData} />}
+        <div className="flex justify-end">
+          <button
+            type="submit"
+            className="px-4 py-2 bg-slate-600 text-white rounded hover:bg-slate-700"
+          >
+            Place Order
+          </button>
+        </div>
+      </form>
+    </div>
   );
 }

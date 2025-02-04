@@ -2,7 +2,7 @@ import { Dialog } from '@headlessui/react';
 import { useState, useEffect } from 'react';
 
 const ROUTES = ['Route A', 'Route B', 'Route C', 'Route D', 'Route E', 'Route F'];
-const PAYMENT_METHODS = ['Cash on Delivery', 'Online Payment'];
+const PAYMENT_OPTIONS = ['Paid', 'To Pay'];
 
 function EditOrderModal({ isOpen, onClose, order, onSave }) {
   const [formData, setFormData] = useState({
@@ -11,7 +11,7 @@ function EditOrderModal({ isOpen, onClose, order, onSave }) {
     phoneNumber: '',
     quantity: '',
     weight: '',
-    paymentMethod: 'Cash on Delivery',
+    paymentOption: 'Paid',
     route: 'Route A'
   });
 
@@ -24,7 +24,7 @@ function EditOrderModal({ isOpen, onClose, order, onSave }) {
         phoneNumber: order.phoneNumber || '',
         quantity: order.quantity || '',
         weight: order.weight || '',
-        paymentMethod: order.paymentMethod || 'Cash on Delivery',
+        paymentOption: order.paymentOption || 'Paid',
         route: order.route || 'Route A'
       });
     }
@@ -37,137 +37,87 @@ function EditOrderModal({ isOpen, onClose, order, onSave }) {
     });
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    onSave({ ...order, ...formData });
+  const handleSave = () => {
+    onSave(formData);
   };
 
   return (
-    <Dialog open={isOpen} onClose={onClose} className="relative z-50">
-      <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
-      
-      <div className="fixed inset-0 flex items-center justify-center p-4">
-        <Dialog.Panel className="mx-auto max-w-xl w-full bg-white rounded-lg shadow-xl p-6">
-          <Dialog.Title className="text-lg font-medium text-gray-900 mb-4">
-            Edit Order Details
-          </Dialog.Title>
-          
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                From Address
-              </label>
-              <textarea
-                name="fromAddress"
-                value={formData.fromAddress}
-                onChange={handleChange}
-                rows="2"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                To Address
-              </label>
-              <textarea
-                name="toAddress"
-                value={formData.toAddress}
-                onChange={handleChange}
-                rows="2"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Phone Number
-              </label>
-              <input
-                type="tel"
-                name="phoneNumber"
-                value={formData.phoneNumber}
-                onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md"
-              />
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Quantity
-                </label>
-                <input
-                  type="number"
-                  name="quantity"
-                  value={formData.quantity}
-                  onChange={handleChange}
-                  min="1"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Weight (kg)
-                </label>
-                <input
-                  type="number"
-                  name="weight"
-                  value={formData.weight}
-                  onChange={handleChange}
-                  min="0.1"
-                  step="0.1"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                />
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Route
-              </label>
-              <select
-                name="route"
-                value={formData.route}
-                onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md"
-              >
-                {ROUTES.map((route) => (
-                  <option key={route} value={route}>{route}</option>
-                ))}
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Payment Method
-              </label>
-              <select
-                name="paymentMethod"
-                value={formData.paymentMethod}
-                onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md"
-              >
-                {PAYMENT_METHODS.map((method) => (
-                  <option key={method} value={method}>{method}</option>
-                ))}
-              </select>
-            </div>
-
-            <div className="flex justify-end space-x-3">
-              <button
-                type="button"
-                onClick={onClose}
-                className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50"
-              >
+    <Dialog open={isOpen} onClose={onClose} className="fixed inset-0 z-10 overflow-y-auto">
+      <div className="flex items-center justify-center min-h-screen p-4">
+        <Dialog.Panel className="bg-white rounded p-6 w-full max-w-md">
+          <Dialog.Title className="text-lg font-bold">Edit Order</Dialog.Title>
+          <form className="space-y-4 mt-4">
+            {/* Other form inputs */}
+            <input
+              type="text"
+              name="fromAddress"
+              placeholder="From Address"
+              value={formData.fromAddress}
+              onChange={handleChange}
+              className="w-full border p-2"
+            />
+            <input
+              type="text"
+              name="toAddress"
+              placeholder="To Address"
+              value={formData.toAddress}
+              onChange={handleChange}
+              className="w-full border p-2"
+            />
+            <input
+              type="text"
+              name="phoneNumber"
+              placeholder="Phone Number"
+              value={formData.phoneNumber}
+              onChange={handleChange}
+              className="w-full border p-2"
+            />
+            <input
+              type="number"
+              name="quantity"
+              placeholder="Quantity"
+              value={formData.quantity}
+              onChange={handleChange}
+              className="w-full border p-2"
+            />
+            <input
+              type="number"
+              name="weight"
+              placeholder="Weight"
+              value={formData.weight}
+              onChange={handleChange}
+              className="w-full border p-2"
+            />
+            <select
+              name="paymentOption"
+              value={formData.paymentOption}
+              onChange={handleChange}
+              className="w-full border p-2"
+            >
+              {PAYMENT_OPTIONS.map((option) => (
+                <option key={option} value={option}>
+                  {option}
+                </option>
+              ))}
+            </select>
+            <select
+              name="route"
+              value={formData.route}
+              onChange={handleChange}
+              className="w-full border p-2"
+            >
+              {ROUTES.map((route) => (
+                <option key={route} value={route}>
+                  {route}
+                </option>
+              ))}
+            </select>
+            <div className="flex justify-end space-x-2">
+              <button type="button" onClick={onClose} className="px-4 py-2 border rounded">
                 Cancel
               </button>
-              <button
-                type="submit"
-                className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700"
-              >
-                Save Changes
+              <button type="button" onClick={handleSave} className="px-4 py-2 bg-blue-600 text-white rounded">
+                Save
               </button>
             </div>
           </form>

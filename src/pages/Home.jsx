@@ -5,6 +5,7 @@ import {
   MapPinIcon
 } from '@heroicons/react/24/outline';
 import { Link } from 'react-router-dom';
+import NewFooter from '../components/Footer';
 
 const portalCards = [
   {
@@ -123,6 +124,8 @@ function Home() {
           </div>
         </div>
       </div>
+
+      <NewFooter />
     </div>
   );
 }

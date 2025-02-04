@@ -1,7 +1,7 @@
 import { Dialog } from '@headlessui/react';
 import PlaceOrderForm from './PlaceOrderForm';
 
-function OrderModal({ isOpen, onClose }) {
+function OrderModal({ isOpen, onClose, onRefresh }) {
   return (
     <Dialog open={isOpen} onClose={onClose} className="relative z-50">
       <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
@@ -12,7 +12,7 @@ function OrderModal({ isOpen, onClose }) {
             Place New Order
           </Dialog.Title>
           
-          <PlaceOrderForm onClose={onClose} />
+          <PlaceOrderForm onClose={onClose} onRefresh={onRefresh} />
         </Dialog.Panel>
       </div>
     </Dialog>
