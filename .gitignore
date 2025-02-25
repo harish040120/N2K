@@ -11,6 +11,7 @@ node_modules
 dist
 dist-ssr
 *.local
+backend/.env
 
 # Editor directories and files
 .vscode/*
@@ -21,4 +22,3 @@ dist-ssr
 *.ntvs*
 
 # Ignore backend environment file
-backend/.env
