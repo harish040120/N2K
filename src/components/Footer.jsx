@@ -45,7 +45,7 @@ function Footer() {
   ];
 
   return (
-    <footer className="bg-slate-600 text-white py-8 mt-12">
+    <footer className="bg-gray-700 text-white py-8 mt-12">
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
           {branches.map((branch, idx) => (
@@ -72,7 +72,7 @@ function Footer() {
           </div>
         </div>
         <div className="mt-4 text-center text-sm text-gray-200">
-          &copy; {new Date().getFullYear()} N2K Logistics. All rights reserved.
+          <a href="/contact" className="text-white hover:text-gray-100">Contact Us</a> | &copy; {new Date().getFullYear()} N2K Logistics. All rights reserved.
         </div>
       </div>
     </footer>

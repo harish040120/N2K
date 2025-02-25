@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import OrderAllocationDetails from './OrderAllocationDetails';
+import { sendSMS, formatOrderConfirmationMessage } from '../../utils/notifications';
 
 const ROUTES = ['Route A', 'Route B', 'Route C', 'Route D', 'Route E', 'Route F'];
 const PAYMENT_OPTIONS = ['Paid', 'To Pay'];
@@ -8,11 +9,12 @@ export default function PlaceOrderForm({ onClose }) {
   const [formData, setFormData] = useState({
     fromAddress: '',
     toAddress: '',
-    phoneNumber: '',
+    phoneNumber: '6379470943', // Set your phone number here
     quantity: '',
     weight: '',
     paymentMethod: 'Paid',
-    route: 'Route A'
+    route: 'Route A',
+    orderId: '' // Add orderId to the form data
   });
 
   const [showAllocation, setShowAllocation] = useState(false);
@@ -32,9 +34,30 @@ export default function PlaceOrderForm({ onClose }) {
     });
   };
 
+  // Function to generate a unique order ID
+  const generateOrderId = () => {
+    return Math.random().toString(36).substring(2, 15).toUpperCase();
+  };
+
   // Static form submission: simulate saving by logging the form data
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Generate a unique order ID
+    const orderId = generateOrderId();
+    setFormData(prevState => ({ ...prevState, orderId: orderId }));
+
+    // Construct the order confirmation message
+    const message = formatOrderConfirmationMessage(orderId);
+
+    // Send the SMS
+    try {
+      await sendSMS(formData.phoneNumber, message);
+      console.log('Order confirmation SMS sent successfully!');
+    } catch (error) {
+      console.error('Failed to send order confirmation SMS:', error);
+    }
+
     console.log('Static submission:', formData);
     // Optionally clear the form or close the modal
     onClose();

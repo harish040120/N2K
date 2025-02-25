@@ -1,45 +1,42 @@
-// In a real application, this would use a proper SMS service
 export async function sendSMS(phoneNumber, message) {
-  const accountSid = 'ACef53a7c24e276608a8989a8cbb2780d4';
-  const authToken = 'c85d40bacc282a3bb734213cc4d2a1f7';
-  const url = `https://api.twilio.com/2010-04-01/Accounts/${accountSid}/Messages.json`;
+  const apiKey = '546fecea-f20b-11ef-8b17-0200cd936042';
+  const url = `https://2factor.in/API/V1/${apiKey}/ADDON_SERVICES/SEND/TSMS`;
 
-  const basicAuth = btoa(`${accountSid}:${authToken}`);
-
-  const data = new URLSearchParams({
-    Body: message,
-    From: '+12693906946',
-    To: phoneNumber
-  });
+  const data = {
+    From: 'TXTLCL', // Replace with your sender ID
+    To: phoneNumber,
+    Msg: message,
+  };
 
   try {
     const response = await fetch(url, {
       method: 'POST',
       headers: {
-        Authorization: `Basic ${basicAuth}`,
-        'Content-Type': 'application/x-www-form-urlencoded',
+        'Content-Type': 'application/json',
       },
-      body: data
+      body: JSON.stringify(data),
     });
 
     if (!response.ok) {
-      throw new Error(`Error sending SMS: ${response.statusText}`);
+      throw new Error(`HTTP error! Status: ${response.status}`);
     }
 
     const responseData = await response.json();
-    console.log('SMS sent successfully:', responseData.sid);
+
+    if (responseData.Status === 'Success') {
+      console.log('SMS sent successfully:', responseData);
+    } else {
+      console.error('Failed to send SMS:', responseData);
+    }
   } catch (error) {
-    console.error('Failed to send SMS:', error);
+    console.error('Error sending SMS:', error);
   }
 }
 
 export function formatDeliveryMessage(orderId, status) {
-  switch (status) {
-    case 'Picked Up':
-      return `Your package ${orderId} has been picked up and is on its way!`;
-    case 'Delivered':
-      return `Your package ${orderId} has been delivered. Thank you for using our service!`;
-    default:
-      return `Your package ${orderId} status has been updated to: ${status}`;
-  }
+  return `Your order ${orderId} has been ${status}.`;
+}
+
+export function formatOrderConfirmationMessage(orderId) {
+  return `Your order ${orderId} has been placed successfully!`;
 }
